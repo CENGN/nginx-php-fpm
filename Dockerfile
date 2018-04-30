@@ -16,8 +16,8 @@ ENV LUAJIT_INC=/usr/include/luajit-2.1
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 RUN apk add --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing gnu-libiconv
 
-RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
-  && CONFIG="\
+RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \ 
+   &&  CONFIG="\
     --prefix=/etc/nginx \
     --sbin-path=/usr/sbin/nginx \
     --modules-path=/usr/lib/nginx/modules \
@@ -72,7 +72,8 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
     gcc \
     libc-dev \
     make \
-    openssl-dev \
+    libressl-dev \
+    openldap-dev \
     pcre-dev \
     zlib-dev \
     linux-headers \
@@ -171,7 +172,8 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     python-dev \
     py-pip \
     augeas-dev \
-    openssl-dev \
+    libressl-dev \
+    openldap-dev \ 
     ca-certificates \
     dialog \
     autoconf \
@@ -187,15 +189,19 @@ RUN echo @testing http://nl.alpinelinux.org/alpine/edge/testing >> /etc/apk/repo
     libffi-dev \
     freetype-dev \
     sqlite-dev \
+    net-snmp-dev \
+    gmp-dev re2c file \
     libjpeg-turbo-dev && \
+    ln -s /usr/include/x86_64-linux-gnu/gmp.h /usr/local/include/ && \
     docker-php-ext-configure gd \
       --with-gd \
       --with-freetype-dir=/usr/include/ \
       --with-png-dir=/usr/include/ \
       --with-jpeg-dir=/usr/include/ && \
+    docker-php-ext-configure gmp && \
     #curl iconv session
     #docker-php-ext-install pdo_mysql pdo_sqlite mysqli mcrypt gd exif intl xsl json soap dom zip opcache && \
-    docker-php-ext-install iconv pdo_mysql pdo_sqlite mysqli gd exif intl xsl json soap dom zip opcache && \
+    docker-php-ext-install iconv pdo pdo_mysql pdo_sqlite mysqli gd exif intl xsl json soap dom zip opcache bcmath snmp ldap pcntl gmp mbstring session simplexml sockets && \
     #pecl install xdebug && \
     docker-php-source delete && \
     mkdir -p /etc/nginx && \

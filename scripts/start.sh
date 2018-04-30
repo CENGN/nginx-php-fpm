@@ -195,6 +195,11 @@ if [[ "$RUN_SCRIPTS" == "1" ]] ; then
   fi
 fi
 
+#copy secret.php to correct path
+cp /var/config/secret.php /var/www/html/wwwroot/inc/secret.php
+chown nginx:nogroup /var/www/html/wwwroot/inc/secret.php
+chmod 400 /var/www/html/wwwroot/inc/secret.php
+
 if [ -z "$SKIP_COMPOSER" ]; then
     # Try auto install for composer
     if [ -f "/var/www/html/composer.lock" ]; then
